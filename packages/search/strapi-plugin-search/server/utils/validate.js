@@ -14,7 +14,7 @@ const validateConfig = (config) => {
     yup
       .object()
       .shape({
-        provider: yup.string().required(),
+        provider: yup.string(),
         providerOptions: yup.object(),
         prefix: yup.string(),
         excludedFields: yup.array().of(yup.string().required()),
