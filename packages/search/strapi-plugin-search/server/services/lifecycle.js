@@ -35,11 +35,15 @@ module.exports = () => ({
             models: [name],
 
             async afterCreate(event) {
-              provider.create({
-                indexName,
-                data: sanitize(event.result),
-                id: idPrefix + event.result.id,
-              });
+              if (event.result.publishedAt) {
+                provider.create({
+                  indexName,
+                  data: sanitize(event.result),
+                  id: idPrefix + event.result.id,
+                });
+              } else {
+                provider.delete({ indexName, id: idPrefix + event.result.id });
+              }
             },
 
             // Todo: Fix `afterCreateMany` event result only has an count, it doesn't provide an array of result objects.
@@ -52,11 +56,15 @@ module.exports = () => ({
             // },
 
             async afterUpdate(event) {
-              provider.update({
-                indexName,
-                data: sanitize(event.result),
-                id: idPrefix + event.result.id,
-              });
+              if (event.result.publishedAt) {
+                provider.update({
+                  indexName,
+                  data: sanitize(event.result),
+                  id: idPrefix + event.result.id,
+                });
+              } else {
+                provider.delete({ indexName, id: idPrefix + event.result.id });
+              }
             },
 
             // Todo: Fix `afterUpdateMany` event result only has an count, it doesn't provide an array of result objects.
